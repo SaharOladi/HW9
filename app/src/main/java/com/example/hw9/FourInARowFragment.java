@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FourInARow extends Fragment {
+public class FourInARowFragment extends Fragment {
 
 
-    public FourInARow() {
+    public FourInARowFragment() {
         // Required empty public constructor
     }
 
