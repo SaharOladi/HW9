@@ -20,6 +20,8 @@ public class FourInARowFragment extends Fragment {
     private TableLayout mTableLayout;
 
     private int mTurn = 1;
+    private int count = 0;
+    private String mStringButtonColor = "";
     private String[] mStringsButtonsColor = new String[25];
 
     public FourInARowFragment() {
@@ -90,27 +92,51 @@ public class FourInARowFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onClick(View v) {
-                        int counter = 0;
-                        String str = move(v);
-                        createStringsArray(counter, str);
+                        count += 1;
+                        move(v);
+                        if (count == 25) {
+                            String[] str = createStringsArray();
+                            checkWinner(str);
+
+                        }
                     }
 
-                    private void createStringsArray(int counter, String str) {
-                        if (str.equals("red")) {
-                            mStringsButtonsColor[counter] = "red";
-                        } else {
-                            mStringsButtonsColor[counter] = "blue";
-                        }
-                        counter++;
-                    }
                 });
             }
         }
     }
 
-    private String move(View view) {
+    private String extractMessageTableLayout(View view) {
+
+        TableLayout tableLayout = (TableLayout) view;
+        String output = "";
+
+        for (int i = 0; i < tableLayout.getChildCount(); i++) {
+            //Remember that .getChildAt() method returns a View, so you would have to cast a specific control.
+            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
+            //This will iterate through the table row.
+            for (int j = 0; j < tableRow.getChildCount(); j++) {
+                Button btn = (Button) tableRow.getChildAt(j);
+                output += btn.getText() + " ";
+            }
+        }
+        return output;
+
+    }
+
+    private String[] createStringsArray() {
+
+        String str = extractMessageTableLayout(mTableLayout);
+        mStringsButtonsColor = str.split(" ");
+        return mStringsButtonsColor;
+
+    }
+
+    private void move(View view) {
+
         Button currentButton = (Button) view;
         String message = "";
+
         if (mTurn == 1) {
             currentButton.getBackground().setColorFilter(0xff0000ff, PorterDuff.Mode.MULTIPLY);
             mTurn = 2;
@@ -122,9 +148,20 @@ public class FourInARowFragment extends Fragment {
 
         }
 
+        setButtonsContext(currentButton, message);
         currentButton.setEnabled(false);
-        return message;
 
+    }
+
+    private void setButtonsContext(Button currentButton, String message) {
+        if (message == "blue") {
+            currentButton.setTextColor(0xff0000ff);
+            currentButton.setText(message);
+
+        } else {
+            currentButton.setTextColor(0xFFFF0000);
+            currentButton.setText(message);
+        }
     }
 
     private TableRow.LayoutParams getTableRowLayoutParams() {
@@ -147,56 +184,64 @@ public class FourInARowFragment extends Fragment {
 
 
         //check horizontally
+        out:
         for (int i = 0; i < 5 - 3; i++) {
             for (int j = 0; j < 5; j++) {
                 if (strInp[i][j].equals("blue") &&
-                        strInp[i][j] == strInp[i + 1][j] &&
-                        strInp[i + 1][j] == strInp[i + 2][j] &&
-                        strInp[i + 2][j] == strInp[i + 3][j]) {
+                        strInp[i + 1][j].equals("blue") &&
+                        strInp[i + 2][j].equals("blue") &&
+                        strInp[i + 3][j].equals("blue")) {
                     output = 1;
+                    break out;
                 }
             }
         }
 
         //checks vertically
+        out:
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5 - 3; j++) {
                 if (strInp[i][j].equals("blue") &&
-                        strInp[i][j] == strInp[i][j + 1] &&
-                        strInp[i][j + 1] == strInp[i][j + 2] &&
-                        strInp[i][j + 2] == strInp[i][j + 3]) {
+                        strInp[i][j + 1].equals("blue") &&
+                        strInp[i][j + 2].equals("blue") &&
+                        strInp[i][j + 3].equals("blue")) {
                     output = 1;
+                    break out;
                 }
             }
         }
 
         //checks the right-ascending diagonal
+        out:
         for (int i = 0; i < 5 - 3; i++) {
             for (int j = 0; j < 5 - 3; j++) {
                 if (strInp[i][j].equals("blue") &&
-                        strInp[i][j] == strInp[i + 1][j + 1] &&
-                        strInp[i + 1][j + 1] == strInp[i + 2][j + 2] &&
-                        strInp[i + 2][j + 2] == strInp[i + 3][j + 3]) {
+                        strInp[i + 1][j + 1].equals("blue") &&
+                        strInp[i + 2][j + 2].equals("blue") &&
+                        strInp[i + 3][j + 3].equals("blue")) {
                     output = 1;
+                    break out;
+
                 }
             }
         }
 
         //checks the left-ascending diagonal
+        out:
         for (int i = 0; i < 5 - 3; i++) {
             for (int j = 3; j < 5; j++) {
                 if (strInp[i][j].equals("blue") &&
-                        strInp[i][j] == strInp[i + 1][j - 1] &&
-                        strInp[i + 1][j - 1] == strInp[i + 2][j - 2] &&
-                        strInp[i + 2][j - 2] == strInp[i + 3][j - 3]) {
+                        strInp[i + 1][j - 1].equals("blue") &&
+                        strInp[i + 2][j - 2].equals("blue") &&
+                        strInp[i + 3][j - 3].equals("blue")) {
                     output = 1;
+                    break out;
                 }
             }
         }
         return output;
 
     }
-
 
 
     private String[][] convertOneArrayDimensional(String[] strings) {
