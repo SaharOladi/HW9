@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fram_layout_tic_tac_toe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#03A8F4"
     tools:context=".TicTacToeFragment">
 
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:paddingTop="35dp"
+        android:text="Game: Tic Tac Toe"
+        android:textColor="#020202"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TableLayout
         android:id="@+id/table_layout"

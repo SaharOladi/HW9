@@ -40,16 +40,18 @@
             android:layout_weight="1"
             android:text="Tic Tac Toe"
             android:textColor="#070707"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/btn_four_in_row"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="4 In Row"
+            android:text="@string/_4_in_row"
             android:textColor="#070707"
-            android:textSize="16dp" />
+            android:textSize="16dp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <FrameLayout
