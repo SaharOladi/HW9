@@ -24,6 +24,10 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="80dp"></TableLayout>
+        android:layout_marginTop="80dp"
+        android:paddingLeft="50dp"
+        android:paddingTop="25dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="40dp"></TableLayout>
 
 </FrameLayout>
