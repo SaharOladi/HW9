@@ -52,7 +52,7 @@ public class TicTacToeFragment extends Fragment {
 
     @SuppressLint("ResourceType")
     private void createButtons(View view) {
-        mTableLayout = view.findViewById(R.id.table_layout);
+        mTableLayout = view.findViewById(R.id.table_layout_tic_tac_toe);
 
         mTableLayout.setGravity(Gravity.CENTER);
         int counter = 0;

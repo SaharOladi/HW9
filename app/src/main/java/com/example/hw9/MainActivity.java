@@ -9,6 +9,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
 
     private Button mButtonTicTacToe;
+    private Button mButtonFourInRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mButtonTicTacToe = findViewById(R.id.btn_tic_tac_toe);
+        mButtonFourInRow = findViewById(R.id.btn_four_in_row);
 
         mButtonTicTacToe.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,6 +29,17 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
 
+        });
+
+        mButtonFourInRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FourInARowFragment fourInARowFragment = new FourInARowFragment();
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragment_container, fourInARowFragment)
+                        .commit();
+            }
         });
 
     }

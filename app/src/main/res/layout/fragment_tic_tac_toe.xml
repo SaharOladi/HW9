@@ -20,7 +20,7 @@
         android:textStyle="bold" />
 
     <TableLayout
-        android:id="@+id/table_layout"
+        android:id="@+id/table_layout_tic_tac_toe"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
