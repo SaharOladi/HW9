@@ -1,5 +1,7 @@
 package com.example.hw9;
 
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,17 +14,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class FourInARowFragment extends Fragment {
 
     private TableLayout mTableLayout;
 
     private int mTurn = 1;
-    private int count = 0;
-    private String mStringButtonColor = "";
-    private String[] mStringsButtonsColor = new String[25];
+    private int mCount = 0;
+    String[][] mButtonsMessage = new String[5][5];
+
 
     public FourInARowFragment() {
         // Required empty public constructor
@@ -57,16 +63,16 @@ public class FourInARowFragment extends Fragment {
         TableRow.LayoutParams cellLp = getTableRowLayoutParams();
 
         mTableLayout.setGravity(Gravity.CENTER);
-        int counter = 0;
+        int counter = 10;
 
         for (int row = 0; row < 5; row++) {
             TableRow tableRow = new TableRow(getActivity());
             tableRow.setGravity(Gravity.CENTER_HORIZONTAL);
             for (int column = 0; column < 5; column++) {
                 Button button = new Button(getActivity());
-//                button.setWidth(50);
-//                button.setHeight(5);
+                setWidthHeightOrientation(button);
                 button.setId(counter);
+                button.setTag("button" + row + column);
                 tableRow.addView(button, cellLp);
                 counter++;
             }
@@ -76,29 +82,115 @@ public class FourInARowFragment extends Fragment {
 
     }
 
+    private void setWidthHeightOrientation(Button button) {
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            button.setWidth(50);
+            button.setHeight(50);
+        } else {
+            button.setWidth(5);
+            button.setHeight(5);
+        }
+    }
+
     private void setListener(View view) {
 
         TableLayout tableLayout = (TableLayout) view;
 
         for (int i = 0; i < tableLayout.getChildCount(); i++) {
-
             TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
-
             for (int j = 0; j < tableRow.getChildCount(); j++) {
-
                 Button btn = (Button) tableRow.getChildAt(j);
 
                 btn.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onClick(View v) {
-                        count += 1;
-                        move(v);
-                        if (count == 25) {
-                            String[] str = createStringsArray();
-                            checkWinner(str);
-
+                        Button button = (Button) v;
+                        move(button);
+                        switch (button.getTag().toString()) {
+                            case "button00":
+                                mButtonsMessage[0][0] = button.getText().toString();
+                                break;
+                            case "button01":
+                                mButtonsMessage[0][1] = button.getText().toString();
+                                break;
+                            case "button02":
+                                mButtonsMessage[0][2] = button.getText().toString();
+                                break;
+                            case "button03":
+                                mButtonsMessage[0][3] = button.getText().toString();
+                                break;
+                            case "button04":
+                                mButtonsMessage[0][4] = button.getText().toString();
+                                break;
+                            case "button10":
+                                mButtonsMessage[1][0] = button.getText().toString();
+                                break;
+                            case "button11":
+                                mButtonsMessage[1][1] = button.getText().toString();
+                                break;
+                            case "button12":
+                                mButtonsMessage[1][2] = button.getText().toString();
+                                break;
+                            case "button13":
+                                mButtonsMessage[1][3] = button.getText().toString();
+                                break;
+                            case "button14":
+                                mButtonsMessage[1][4] = button.getText().toString();
+                                break;
+                            case "button20":
+                                mButtonsMessage[2][0] = button.getText().toString();
+                                break;
+                            case "button21":
+                                mButtonsMessage[2][1] = button.getText().toString();
+                                break;
+                            case "button22":
+                                mButtonsMessage[2][2] = button.getText().toString();
+                                break;
+                            case "button23":
+                                mButtonsMessage[2][3] = button.getText().toString();
+                                break;
+                            case "button24":
+                                mButtonsMessage[2][4] = button.getText().toString();
+                                break;
+                            case "button30":
+                                mButtonsMessage[3][0] = button.getText().toString();
+                                break;
+                            case "button31":
+                                mButtonsMessage[3][1] = button.getText().toString();
+                                break;
+                            case "button32":
+                                mButtonsMessage[3][2] = button.getText().toString();
+                                break;
+                            case "button33":
+                                mButtonsMessage[3][3] = button.getText().toString();
+                                break;
+                            case "button34":
+                                mButtonsMessage[3][4] = button.getText().toString();
+                                break;
+                            case "button40":
+                                mButtonsMessage[4][0] = button.getText().toString();
+                                break;
+                            case "button41":
+                                mButtonsMessage[4][1] = button.getText().toString();
+                                break;
+                            case "button42":
+                                mButtonsMessage[4][2] = button.getText().toString();
+                                break;
+                            case "button43":
+                                mButtonsMessage[4][3] = button.getText().toString();
+                                break;
+                            case "button44":
+                                mButtonsMessage[4][4] = button.getText().toString();
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + button.getId());
                         }
+                        mCount += 1;
+                        int value = checkWinner();
+                        if (value == 0) {
+                            if (mCount == 25)
+                                showSnackBar(mTableLayout, value);
+                        } else showSnackBar(mTableLayout, value);
                     }
 
                 });
@@ -106,30 +198,44 @@ public class FourInARowFragment extends Fragment {
         }
     }
 
-    private String extractMessageTableLayout(View view) {
+    private void showSnackBar(View view, int value) {
 
-        TableLayout tableLayout = (TableLayout) view;
-        String output = "";
+        TextView textView = new TextView(getActivity());
+        Snackbar snackbar;
 
-        for (int i = 0; i < tableLayout.getChildCount(); i++) {
-            //Remember that .getChildAt() method returns a View, so you would have to cast a specific control.
-            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
-            //This will iterate through the table row.
-            for (int j = 0; j < tableRow.getChildCount(); j++) {
-                Button btn = (Button) tableRow.getChildAt(j);
-                output += btn.getText() + " ";
+        switch (value) {
+            case 1: {
+                snackbar = Snackbar.make(view, "Player one wins!!!", Snackbar.LENGTH_LONG);
+                break;
+            }
+            case 2: {
+                snackbar = Snackbar.make(view, "Player two wins!!!", Snackbar.LENGTH_LONG);
+                break;
+            }
+            case 3: {
+                snackbar = Snackbar.make(view, "Both of Player one and twe win!!!", Snackbar.LENGTH_LONG);
+                break;
+            }
+            case 0: {
+                snackbar = Snackbar.make(view, "GameOver!!!", Snackbar.LENGTH_LONG);
+                break;
+            }
+            default: {
+                throw new IllegalStateException("Unexpected value: " + value);
             }
         }
-        return output;
-
+        snackbar.show();
+        resetGame(textView);
     }
 
-    private String[] createStringsArray() {
-
-        String str = extractMessageTableLayout(mTableLayout);
-        mStringsButtonsColor = str.split(" ");
-        return mStringsButtonsColor;
-
+    private void resetGame(TextView textView) {
+        mTableLayout.setVisibility(View.INVISIBLE);
+        textView.setText("click four in row button to play again!");
+        FrameLayout frameLayout = getActivity().findViewById(R.id.fram_layout_four_in_row);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextColor(Color.BLACK);
+        textView.setTextSize(20);
+        frameLayout.addView(textView);
     }
 
     private void move(View view) {
@@ -140,11 +246,11 @@ public class FourInARowFragment extends Fragment {
         if (mTurn == 1) {
             currentButton.getBackground().setColorFilter(0xff0000ff, PorterDuff.Mode.MULTIPLY);
             mTurn = 2;
-            message = "blue";
+            message = "b";
         } else if (mTurn == 2) {
             currentButton.getBackground().setColorFilter(0xFFFF0000, PorterDuff.Mode.MULTIPLY);
             mTurn = 1;
-            message = "red";
+            message = "r";
 
         }
 
@@ -154,7 +260,7 @@ public class FourInARowFragment extends Fragment {
     }
 
     private void setButtonsContext(Button currentButton, String message) {
-        if (message == "blue") {
+        if (message == "b") {
             currentButton.setTextColor(0xff0000ff);
             currentButton.setText(message);
 
@@ -178,21 +284,29 @@ public class FourInARowFragment extends Fragment {
                 1.0f);
     }
 
-    private int checkWinner(String[] strings) {
+    private int checkWinner() {
         int output = 0;
-        String[][] strInp = convertOneArrayDimensional(strings);
-
 
         //check horizontally
         out:
         for (int i = 0; i < 5 - 3; i++) {
             for (int j = 0; j < 5; j++) {
-                if (strInp[i][j].equals("blue") &&
-                        strInp[i + 1][j].equals("blue") &&
-                        strInp[i + 2][j].equals("blue") &&
-                        strInp[i + 3][j].equals("blue")) {
-                    output = 1;
-                    break out;
+                if (mButtonsMessage[i][j] != null && mButtonsMessage[i + 1][j] != null &&
+                        mButtonsMessage[i + 2][j] != null && mButtonsMessage[i + 3][j] != null) {
+                    if (mButtonsMessage[i][j].equals("b") &&
+                            mButtonsMessage[i + 1][j].equals("b") &&
+                            mButtonsMessage[i + 2][j].equals("b") &&
+                            mButtonsMessage[i + 3][j].equals("b")) {
+                        output = 1;
+                        break out;
+                    }
+                    if (mButtonsMessage[i][j].equals("r") &&
+                            mButtonsMessage[i + 1][j].equals("r") &&
+                            mButtonsMessage[i + 2][j].equals("r") &&
+                            mButtonsMessage[i + 3][j].equals("r")) {
+                        output = 2;
+                        break out;
+                    }
                 }
             }
         }
@@ -201,12 +315,22 @@ public class FourInARowFragment extends Fragment {
         out:
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5 - 3; j++) {
-                if (strInp[i][j].equals("blue") &&
-                        strInp[i][j + 1].equals("blue") &&
-                        strInp[i][j + 2].equals("blue") &&
-                        strInp[i][j + 3].equals("blue")) {
-                    output = 1;
-                    break out;
+                if (mButtonsMessage[i][j] != null && mButtonsMessage[i][j + 1] != null &&
+                        mButtonsMessage[i][j + 2] != null && mButtonsMessage[i][j + 3] != null) {
+                    if (mButtonsMessage[i][j].equals("b") &&
+                            mButtonsMessage[i][j + 1].equals("b") &&
+                            mButtonsMessage[i][j + 2].equals("b") &&
+                            mButtonsMessage[i][j + 3].equals("b")) {
+                        output = 1;
+                        break out;
+                    }
+                    if (mButtonsMessage[i][j].equals("r") &&
+                            mButtonsMessage[i][j + 1].equals("r") &&
+                            mButtonsMessage[i][j + 2].equals("r") &&
+                            mButtonsMessage[i][j + 3].equals("r")) {
+                        output = 2;
+                        break out;
+                    }
                 }
             }
         }
@@ -215,13 +339,22 @@ public class FourInARowFragment extends Fragment {
         out:
         for (int i = 0; i < 5 - 3; i++) {
             for (int j = 0; j < 5 - 3; j++) {
-                if (strInp[i][j].equals("blue") &&
-                        strInp[i + 1][j + 1].equals("blue") &&
-                        strInp[i + 2][j + 2].equals("blue") &&
-                        strInp[i + 3][j + 3].equals("blue")) {
-                    output = 1;
-                    break out;
-
+                if (mButtonsMessage[i][j] != null && mButtonsMessage[i + 1][j + 1] != null &&
+                        mButtonsMessage[i + 2][j + 2] != null && mButtonsMessage[i + 3][j + 3] != null) {
+                    if (mButtonsMessage[i][j].equals("b") &&
+                            mButtonsMessage[i + 1][j + 1].equals("b") &&
+                            mButtonsMessage[i + 2][j + 2].equals("b") &&
+                            mButtonsMessage[i + 3][j + 3].equals("b")) {
+                        output = 1;
+                        break out;
+                    }
+                    if (mButtonsMessage[i][j].equals("r") &&
+                            mButtonsMessage[i + 1][j + 1].equals("r") &&
+                            mButtonsMessage[i + 2][j + 2].equals("r") &&
+                            mButtonsMessage[i + 3][j + 3].equals("r")) {
+                        output = 2;
+                        break out;
+                    }
                 }
             }
         }
@@ -230,29 +363,26 @@ public class FourInARowFragment extends Fragment {
         out:
         for (int i = 0; i < 5 - 3; i++) {
             for (int j = 3; j < 5; j++) {
-                if (strInp[i][j].equals("blue") &&
-                        strInp[i + 1][j - 1].equals("blue") &&
-                        strInp[i + 2][j - 2].equals("blue") &&
-                        strInp[i + 3][j - 3].equals("blue")) {
-                    output = 1;
-                    break out;
+                if (mButtonsMessage[i][j] != null && mButtonsMessage[i + 1][j - 1] != null &&
+                        mButtonsMessage[i + 2][j - 2] != null && mButtonsMessage[i + 3][j - 3] != null) {
+                    if (mButtonsMessage[i][j].equals("b") &&
+                            mButtonsMessage[i + 1][j - 1].equals("b") &&
+                            mButtonsMessage[i + 2][j - 2].equals("b") &&
+                            mButtonsMessage[i + 3][j - 3].equals("b")) {
+                        output = 1;
+                        break out;
+                    }
+                    if (mButtonsMessage[i][j].equals("r") &&
+                            mButtonsMessage[i + 1][j - 1].equals("r") &&
+                            mButtonsMessage[i + 2][j - 2].equals("r") &&
+                            mButtonsMessage[i + 3][j - 3].equals("r")) {
+                        output = 2;
+                        break out;
+                    }
                 }
             }
         }
         return output;
-
     }
 
-
-    private String[][] convertOneArrayDimensional(String[] strings) {
-        int counter = 0;
-        String[][] inpStrings = new String[5][5];
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                inpStrings[i][j] = strings[counter];
-                counter++;
-            }
-        }
-        return inpStrings;
-    }
 }

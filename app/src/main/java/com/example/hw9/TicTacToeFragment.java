@@ -130,7 +130,6 @@ public class TicTacToeFragment extends Fragment {
                                 throw new IllegalStateException("Unexpected value: " + button.getId());
                         }
                         mCount += 1;
-                        System.out.println(mCount);
                         int value = checkWinner();
                         if (value == 0) {
                             if (mCount == 9)
@@ -202,6 +201,7 @@ public class TicTacToeFragment extends Fragment {
         FrameLayout frameLayout = getActivity().findViewById(R.id.fram_layout_tic_tac_toe);
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(Color.BLACK);
+        textView.setTextSize(20);
         frameLayout.addView(textView);
     }
 
