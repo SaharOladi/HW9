@@ -64,8 +64,8 @@ public class FourInARowFragment extends Fragment {
             tableRow.setGravity(Gravity.CENTER_HORIZONTAL);
             for (int column = 0; column < 5; column++) {
                 Button button = new Button(getActivity());
-                button.setWidth(150);
-                button.setHeight(150);
+//                button.setWidth(50);
+//                button.setHeight(5);
                 button.setId(counter);
                 tableRow.addView(button, cellLp);
                 counter++;

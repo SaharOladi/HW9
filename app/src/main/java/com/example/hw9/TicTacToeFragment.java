@@ -1,10 +1,10 @@
 package com.example.hw9;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.Gravity;
@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -23,8 +24,9 @@ public class TicTacToeFragment extends Fragment {
 
     private TableLayout mTableLayout;
 
-    private int count = 0;
     private int mTurn = 1;
+    private int mCount = 0;
+    String[] mButtonsMessage = new String[9];
 
 
     public TicTacToeFragment() {
@@ -45,7 +47,6 @@ public class TicTacToeFragment extends Fragment {
 
         createButtons(fragmentTicTacToeView);
         setListener(mTableLayout);
-
         return fragmentTicTacToeView;
     }
 
@@ -56,15 +57,15 @@ public class TicTacToeFragment extends Fragment {
 
         mTableLayout.setGravity(Gravity.CENTER);
         int counter = 0;
+        Button button;
 
         for (int row = 0; row < 3; row++) {
             TableRow tableRow = new TableRow(getActivity());
-            tableRow.setGravity(Gravity.CENTER_HORIZONTAL);
+            tableRow.setGravity(Gravity.CENTER);
             for (int column = 0; column < 3; column++) {
-                Button button = new Button(getActivity());
-                button.setWidth(150);
-                button.setHeight(150);
-                button.setId(counter);
+                button = new Button(getActivity());
+                setWidthHeightOrientation(button);
+                button.setId(counter + 1);
                 tableRow.addView(button);
                 counter++;
             }
@@ -72,6 +73,16 @@ public class TicTacToeFragment extends Fragment {
             mTableLayout.addView(tableRow, new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
+    }
+
+    private void setWidthHeightOrientation(Button button) {
+        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            button.setWidth(150);
+            button.setHeight(150);
+        } else {
+            button.setWidth(50);
+            button.setHeight(50);
+        }
     }
 
     private void setListener(View view) {
@@ -85,13 +96,46 @@ public class TicTacToeFragment extends Fragment {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        move(v);
-                        count += 1;
-                        if (count == 9) {
-                            String str = extractMessageTableLayout(mTableLayout);
-                            int value = checkWinner(str);
-                            showSnackBar(mTableLayout, value);
+                        Button button = (Button) v;
+                        move(button);
+                        switch (button.getId()) {
+                            case 1:
+                                mButtonsMessage[0] = button.getText().toString();
+                                break;
+                            case 2:
+                                mButtonsMessage[1] = button.getText().toString();
+                                break;
+                            case 3:
+                                mButtonsMessage[2] = button.getText().toString();
+                                break;
+                            case 4:
+                                mButtonsMessage[3] = button.getText().toString();
+                                break;
+                            case 5:
+                                mButtonsMessage[4] = button.getText().toString();
+                                break;
+                            case 6:
+                                mButtonsMessage[5] = button.getText().toString();
+                                break;
+                            case 7:
+                                mButtonsMessage[6] = button.getText().toString();
+                                break;
+                            case 8:
+                                mButtonsMessage[7] = button.getText().toString();
+                                break;
+                            case 9:
+                                mButtonsMessage[8] = button.getText().toString();
+                                break;
+                            default:
+                                throw new IllegalStateException("Unexpected value: " + button.getId());
                         }
+                        mCount += 1;
+                        System.out.println(mCount);
+                        int value = checkWinner();
+                        if (value == 0) {
+                            if (mCount == 9)
+                                showSnackBar(mTableLayout, value);
+                        } else showSnackBar(mTableLayout, value);
                     }
                 });
             }
@@ -99,8 +143,7 @@ public class TicTacToeFragment extends Fragment {
     }
 
     @SuppressLint("ResourceType")
-    private void move(View view) {
-        Button currentButton = (Button) view;
+    private void move(Button currentButton) {
         String message = "";
 
         if (mTurn == 1) {
@@ -115,6 +158,7 @@ public class TicTacToeFragment extends Fragment {
 
     }
 
+
     private void setButtons(Button currentButton, String message) {
         currentButton.setText(message);
         currentButton.setTextSize(20);
@@ -122,87 +166,143 @@ public class TicTacToeFragment extends Fragment {
         currentButton.setEnabled(false);
     }
 
-    private String extractMessageTableLayout(View view) {
-
-        TableLayout tableLayout = (TableLayout) view;
-        String output = "";
-
-        for (int i = 0; i < tableLayout.getChildCount(); i++) {
-            //Remember that .getChildAt() method returns a View, so you would have to cast a specific control.
-            TableRow tableRow = (TableRow) tableLayout.getChildAt(i);
-            //This will iterate through the table row.
-            for (int j = 0; j < tableRow.getChildCount(); j++) {
-                Button btn = (Button) tableRow.getChildAt(j);
-                output += btn.getText();
-            }
-        }
-        return output;
-
-    }
-
     private void showSnackBar(View view, int value) {
 
-        view = (TableLayout) view;
+        TextView textView = new TextView(getActivity());
         Snackbar snackbar;
 
         switch (value) {
-            case 1:
+            case 1: {
                 snackbar = Snackbar.make(view, "Player one wins!!!", Snackbar.LENGTH_LONG);
                 break;
-            case 2:
+            }
+            case 2: {
                 snackbar = Snackbar.make(view, "Player two wins!!!", Snackbar.LENGTH_LONG);
                 break;
-            case 3:
+            }
+            case 3: {
                 snackbar = Snackbar.make(view, "Both of Player one and twe win!!!", Snackbar.LENGTH_LONG);
                 break;
-            case 0:
+            }
+            case 0: {
                 snackbar = Snackbar.make(view, "GameOver!!!", Snackbar.LENGTH_LONG);
                 break;
-            default:
+            }
+            default: {
                 throw new IllegalStateException("Unexpected value: " + value);
+            }
         }
         snackbar.show();
+        resetGame(textView);
+    }
+
+    private void resetGame(TextView textView) {
+        mTableLayout.setVisibility(View.INVISIBLE);
+        textView.setText("click tic tac toe button to play again!");
+        FrameLayout frameLayout = getActivity().findViewById(R.id.fram_layout_tic_tac_toe);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextColor(Color.BLACK);
+        frameLayout.addView(textView);
     }
 
 
-    private int checkWinner(String string) {
-
-        String[] buttonsMessage = string.split("");
+    private int checkWinner() {
         int value = 0;
         boolean winnerOne = false;
         boolean winnerTwo = false;
 
-        //Rows
-        if (((buttonsMessage[0].equals("O")) && (buttonsMessage[1].equals("O")) && (buttonsMessage[2].equals("O"))) ||
-                ((buttonsMessage[3].equals("O")) && (buttonsMessage[4].equals("O")) && (buttonsMessage[5].equals("O"))) ||
-                ((buttonsMessage[6].equals("O")) && (buttonsMessage[7].equals("O")) && (buttonsMessage[8].equals("O")))) {
-            winnerOne = true;
+
+        if (mButtonsMessage[0] != null && mButtonsMessage[1] != null && mButtonsMessage[2] != null) {
+            //Rows
+            if (mButtonsMessage[0].equals("O") && mButtonsMessage[1].equals("O") &&
+                    mButtonsMessage[2].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[0].equals("X") && mButtonsMessage[1].equals("X") &&
+                    mButtonsMessage[2].equals("X")) {
+                winnerTwo = true;
+            }
         }
-        if (((buttonsMessage[0].equals("X")) && (buttonsMessage[1].equals("X")) && (buttonsMessage[2].equals("X"))) ||
-                ((buttonsMessage[3].equals("X")) && (buttonsMessage[4].equals("X")) && (buttonsMessage[5].equals("X"))) ||
-                ((buttonsMessage[6].equals("X")) && (buttonsMessage[7].equals("X")) && (buttonsMessage[8].equals("X")))) {
-            winnerTwo = true;
+
+        if (mButtonsMessage[3] != null && mButtonsMessage[4] != null && mButtonsMessage[5] != null) {
+            //Rows
+            if (mButtonsMessage[3].equals("O") && mButtonsMessage[4].equals("O") &&
+                    mButtonsMessage[5].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[3].equals("X") && mButtonsMessage[4].equals("X") &&
+                    mButtonsMessage[5].equals("X")) {
+                winnerTwo = true;
+            }
         }
-        //Column
-        if (((buttonsMessage[0].equals("O")) && (buttonsMessage[3].equals("O")) && (buttonsMessage[6].equals("O"))) ||
-                ((buttonsMessage[1].equals("O")) && (buttonsMessage[4].equals("O")) && (buttonsMessage[7].equals("O"))) ||
-                ((buttonsMessage[2].equals("O")) && (buttonsMessage[5].equals("O")) && (buttonsMessage[8].equals("O")))) {
-            winnerOne = true;
+
+        if (mButtonsMessage[6] != null && mButtonsMessage[7] != null && mButtonsMessage[8] != null) {
+            //Rows
+            if (mButtonsMessage[6].equals("O") && mButtonsMessage[7].equals("O") &&
+                    mButtonsMessage[8].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[6].equals("X") && mButtonsMessage[7].equals("X") &&
+                    mButtonsMessage[8].equals("X")) {
+                winnerTwo = true;
+            }
         }
-        if (((buttonsMessage[0].equals("X")) && (buttonsMessage[3].equals("X")) && (buttonsMessage[6].equals("X"))) ||
-                ((buttonsMessage[1].equals("X")) && (buttonsMessage[4].equals("X")) && (buttonsMessage[7].equals("X"))) ||
-                ((buttonsMessage[2].equals("X")) && (buttonsMessage[5].equals("X")) && (buttonsMessage[8].equals("X")))) {
-            winnerTwo = true;
+
+        if (mButtonsMessage[0] != null && mButtonsMessage[3] != null && mButtonsMessage[6] != null) {
+            //Column
+            if (mButtonsMessage[0].equals("O") && mButtonsMessage[3].equals("O") &&
+                    mButtonsMessage[6].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[0].equals("X") && mButtonsMessage[3].equals("X") &&
+                    mButtonsMessage[6].equals("X")) {
+                winnerTwo = true;
+            }
         }
-        //Diagonal
-        if (((buttonsMessage[0].equals("O")) && (buttonsMessage[4].equals("O")) && (buttonsMessage[8].equals("O"))) ||
-                ((buttonsMessage[2].equals("O")) && (buttonsMessage[4].equals("O")) && (buttonsMessage[6].equals("O")))) {
-            winnerOne = true;
+
+        if (mButtonsMessage[1] != null && mButtonsMessage[4] != null && mButtonsMessage[7] != null) {
+            //Column
+            if (mButtonsMessage[1].equals("O") && mButtonsMessage[4].equals("O") &&
+                    mButtonsMessage[7].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[1].equals("X") && mButtonsMessage[4].equals("X") &&
+                    mButtonsMessage[7].equals("X")) {
+                winnerTwo = true;
+            }
         }
-        if (((buttonsMessage[0].equals("X"))) && (buttonsMessage[4].equals("X")) && (buttonsMessage[8].equals("X")) ||
-                ((buttonsMessage[2].equals("X"))) && (buttonsMessage[4].equals("X")) && (buttonsMessage[6].equals("X"))) {
-            winnerTwo = true;
+
+        if (mButtonsMessage[2] != null && mButtonsMessage[5] != null && mButtonsMessage[8] != null) {
+            //Column
+            if (mButtonsMessage[2].equals("O") && mButtonsMessage[5].equals("O") &&
+                    mButtonsMessage[8].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[2].equals("X") && mButtonsMessage[8].equals("X") &&
+                    mButtonsMessage[5].equals("X")) {
+                winnerTwo = true;
+            }
         }
+
+        if (mButtonsMessage[0] != null && mButtonsMessage[4] != null && mButtonsMessage[8] != null) {
+            //Diagonal
+            if (mButtonsMessage[0].equals("O") && mButtonsMessage[4].equals("O") && mButtonsMessage[8].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[0].equals("X") && mButtonsMessage[4].equals("X") && mButtonsMessage[8].equals("X")) {
+                winnerTwo = true;
+            }
+        }
+        if (mButtonsMessage[2] != null && mButtonsMessage[4] != null && mButtonsMessage[6] != null) {
+            //Diagonal
+            if (mButtonsMessage[2].equals("O") && mButtonsMessage[4].equals("O") && mButtonsMessage[6].equals("O")) {
+                winnerOne = true;
+            }
+            if (mButtonsMessage[2].equals("X") && mButtonsMessage[4].equals("X") && mButtonsMessage[6].equals("X")) {
+                winnerTwo = true;
+            }
+        }
+
 
         if (winnerOne)
             value = 1;
