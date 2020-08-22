@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
                 TicTacToeFragment ticTacToeFragment = new TicTacToeFragment();
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.fragment_container, ticTacToeFragment)
+                        .replace(R.id.fragment_container, ticTacToeFragment)
                         .commit();
             }
 
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 FourInARowFragment fourInARowFragment = new FourInARowFragment();
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.fragment_container, fourInARowFragment)
+                        .replace(R.id.fragment_container, fourInARowFragment)
                         .commit();
             }
         });

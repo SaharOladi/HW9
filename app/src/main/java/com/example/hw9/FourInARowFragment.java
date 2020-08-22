@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -28,6 +29,7 @@ public class FourInARowFragment extends Fragment {
     private int mTurn = 1;
     private int mCount = 0;
     String[][] mButtonsMessage = new String[5][5];
+    boolean[][] mCanFill = new boolean[5][5];
 
 
     public FourInARowFragment() {
@@ -67,6 +69,7 @@ public class FourInARowFragment extends Fragment {
 
         for (int row = 0; row < 5; row++) {
             TableRow tableRow = new TableRow(getActivity());
+            tableRow.setWeightSum(5);
             tableRow.setGravity(Gravity.CENTER_HORIZONTAL);
             for (int column = 0; column < 5; column++) {
                 Button button = new Button(getActivity());
@@ -87,8 +90,8 @@ public class FourInARowFragment extends Fragment {
             button.setWidth(50);
             button.setHeight(50);
         } else {
-            button.setWidth(5);
-            button.setHeight(5);
+//            button.setWidth(5);
+//            button.setHeight(5);
         }
     }
 
@@ -105,81 +108,165 @@ public class FourInARowFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Button button = (Button) v;
-                        move(button);
                         switch (button.getTag().toString()) {
                             case "button00":
+                                if(mButtonsMessage[1][0] != null && !mButtonsMessage[1][0].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[0][0] = button.getText().toString();
                                 break;
                             case "button01":
+                                if(mButtonsMessage[1][1] != null && !mButtonsMessage[1][1].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[0][1] = button.getText().toString();
                                 break;
                             case "button02":
+                                if(mButtonsMessage[1][2] != null && !mButtonsMessage[1][2].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[0][2] = button.getText().toString();
                                 break;
                             case "button03":
+                                if(mButtonsMessage[1][3] != null && !mButtonsMessage[1][3].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[0][3] = button.getText().toString();
                                 break;
                             case "button04":
+                                if(mButtonsMessage[1][4] != null && !mButtonsMessage[1][4].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[0][4] = button.getText().toString();
                                 break;
                             case "button10":
+                                if(mButtonsMessage[2][0] != null && !mButtonsMessage[2][0].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[1][0] = button.getText().toString();
                                 break;
                             case "button11":
+                                if(mButtonsMessage[2][1] != null && !mButtonsMessage[2][1].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[1][1] = button.getText().toString();
                                 break;
                             case "button12":
+                                if(mButtonsMessage[2][2] != null && !mButtonsMessage[2][2].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[1][2] = button.getText().toString();
                                 break;
                             case "button13":
+                                if(mButtonsMessage[2][3] != null && !mButtonsMessage[2][3].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[1][3] = button.getText().toString();
                                 break;
                             case "button14":
+                                if(mButtonsMessage[2][4] != null && !mButtonsMessage[2][4].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[1][4] = button.getText().toString();
                                 break;
                             case "button20":
+                                if(mButtonsMessage[3][0] != null && !mButtonsMessage[3][0].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[2][0] = button.getText().toString();
                                 break;
                             case "button21":
+                                if(mButtonsMessage[3][1] != null && !mButtonsMessage[3][1].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[2][1] = button.getText().toString();
                                 break;
                             case "button22":
+                                if(mButtonsMessage[3][2] != null && !mButtonsMessage[3][2].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[2][2] = button.getText().toString();
                                 break;
                             case "button23":
+                                if(mButtonsMessage[3][3] != null && !mButtonsMessage[3][3].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[2][3] = button.getText().toString();
                                 break;
                             case "button24":
+                                if(mButtonsMessage[3][4] != null && !mButtonsMessage[3][4].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[2][4] = button.getText().toString();
                                 break;
                             case "button30":
+                                if(mButtonsMessage[4][0] != null && !mButtonsMessage[4][0].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[3][0] = button.getText().toString();
                                 break;
                             case "button31":
+                                if(mButtonsMessage[4][1] != null && !mButtonsMessage[4][1].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[3][1] = button.getText().toString();
                                 break;
                             case "button32":
+                                if(mButtonsMessage[4][2] != null && !mButtonsMessage[4][2].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[3][2] = button.getText().toString();
                                 break;
                             case "button33":
+                                if(mButtonsMessage[4][3] != null && !mButtonsMessage[4][3].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[3][3] = button.getText().toString();
                                 break;
                             case "button34":
+                                if(mButtonsMessage[4][4] != null && !mButtonsMessage[4][4].isEmpty())
+                                    move(button);
+                                else
+                                    Toast.makeText(getActivity(), "You can not click", Toast.LENGTH_LONG).show();
                                 mButtonsMessage[3][4] = button.getText().toString();
                                 break;
                             case "button40":
+                                move(button);
                                 mButtonsMessage[4][0] = button.getText().toString();
                                 break;
                             case "button41":
+                                move(button);
                                 mButtonsMessage[4][1] = button.getText().toString();
                                 break;
                             case "button42":
+                                move(button);
                                 mButtonsMessage[4][2] = button.getText().toString();
                                 break;
                             case "button43":
+                                move(button);
                                 mButtonsMessage[4][3] = button.getText().toString();
                                 break;
                             case "button44":
+                                move(button);
                                 mButtonsMessage[4][4] = button.getText().toString();
                                 break;
                             default:

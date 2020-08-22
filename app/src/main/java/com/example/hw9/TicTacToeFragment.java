@@ -58,9 +58,10 @@ public class TicTacToeFragment extends Fragment {
         mTableLayout.setGravity(Gravity.CENTER);
         int counter = 0;
         Button button;
-
+        // to do: weight
         for (int row = 0; row < 3; row++) {
             TableRow tableRow = new TableRow(getActivity());
+            tableRow.setWeightSum(3);
             tableRow.setGravity(Gravity.CENTER);
             for (int column = 0; column < 3; column++) {
                 button = new Button(getActivity());
@@ -80,8 +81,8 @@ public class TicTacToeFragment extends Fragment {
             button.setWidth(150);
             button.setHeight(150);
         } else {
-            button.setWidth(50);
-            button.setHeight(50);
+//            button.setWidth(50);
+//            button.setHeight(50);
         }
     }
 
