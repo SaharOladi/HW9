@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private Button mButtonTicTacToe;
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         mButtonTicTacToe = findViewById(R.id.btn_tic_tac_toe);
         mButtonFourInRow = findViewById(R.id.btn_four_in_row);

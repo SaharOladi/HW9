@@ -1,12 +1,10 @@
 package com.example.hw9;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +15,31 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.snackbar.Snackbar;
 
 
 public class TicTacToeFragment extends Fragment {
 
+
+    public static final String BUNDLE_BUTTON_MESSAGE = "null";
+    public static final String BUNDLE_BUTTON_TAG = "BUNDLE_BUTTON_TAG";
+    public static final String BUNDLE_BUTTON_IDS = BUNDLE_BUTTON_TAG;
+    public static final String BUNDLE_BUTTON_ENABLE = "BUNDLE_BUTTON_ENABLE";
+    public static final String BUNDLE_WINNER_VALUE = "BUNDLE_WINNER_VALUE";
+    public static final String BUNDLE_M_COUNT = "BUNDLE_M_COUNT";
+    public static final String BUNDLE_M_BUTTON_MESSAGE = "BUNDLE_M_BUTTON_MESSAGE";
     private TableLayout mTableLayout;
 
     private int mTurn = 1;
     private int mCount = 0;
+    int winnerValue = 0;
     String[] mButtonsMessage = new String[9];
+    int[] ids = new int[9];
+    String[] getButtonsMessage = new String[9];
 
 
     public TicTacToeFragment() {
@@ -37,6 +50,7 @@ public class TicTacToeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -47,6 +61,7 @@ public class TicTacToeFragment extends Fragment {
 
         createButtons(fragmentTicTacToeView);
         setListener(mTableLayout);
+
         return fragmentTicTacToeView;
     }
 
@@ -95,8 +110,10 @@ public class TicTacToeFragment extends Fragment {
             for (int j = 0; j < tableRow.getChildCount(); j++) {
                 Button btn = (Button) tableRow.getChildAt(j);
                 btn.setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View v) {
+
                         Button button = (Button) v;
                         move(button);
                         switch (button.getId()) {
@@ -131,11 +148,12 @@ public class TicTacToeFragment extends Fragment {
                                 throw new IllegalStateException("Unexpected value: " + button.getId());
                         }
                         mCount += 1;
-                        int value = checkWinner();
-                        if (value == 0) {
+                        winnerValue = checkWinner();
+                        if (winnerValue == 0) {
                             if (mCount == 9)
-                                showSnackBar(mTableLayout, value);
-                        } else showSnackBar(mTableLayout, value);
+                                showSnackBar(mTableLayout, winnerValue);
+                        } else showSnackBar(mTableLayout, winnerValue);
+
                     }
                 });
             }
@@ -144,6 +162,7 @@ public class TicTacToeFragment extends Fragment {
 
     @SuppressLint("ResourceType")
     private void move(Button currentButton) {
+
         String message = "";
 
         if (mTurn == 1) {
@@ -315,4 +334,56 @@ public class TicTacToeFragment extends Fragment {
         return value;
     }
 
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int count = 0;
+        for (int i = 0; i < mTableLayout.getChildCount(); i++) {
+            TableRow tableRow = (TableRow) mTableLayout.getChildAt(i);
+            for (int j = 0; j < tableRow.getChildCount(); j++) {
+                Button btn = (Button) tableRow.getChildAt(j);
+                ids[count] = btn.getId();
+                getButtonsMessage[count] = btn.getText().toString();
+                if (btn.isEnabled())
+                    outState.putBoolean(BUNDLE_BUTTON_ENABLE, true);
+                outState.putStringArray(BUNDLE_BUTTON_MESSAGE, getButtonsMessage);
+                outState.putIntArray(BUNDLE_BUTTON_IDS, ids);
+                count++;
+
+            }
+        }
+        outState.putInt(BUNDLE_WINNER_VALUE, winnerValue);
+        outState.putInt(BUNDLE_M_COUNT, mCount);
+        outState.putStringArray(BUNDLE_M_BUTTON_MESSAGE, mButtonsMessage);
+
+
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            String[] strings = savedInstanceState.getStringArray(BUNDLE_BUTTON_MESSAGE);
+            int[] ints = savedInstanceState.getIntArray(BUNDLE_BUTTON_IDS);
+            int count = 0;
+            for (int i = 0; i < mTableLayout.getChildCount(); i++) {
+                TableRow tableRow = (TableRow) mTableLayout.getChildAt(i);
+                for (int j = 0; j < tableRow.getChildCount(); j++) {
+                    Button btn = (Button) tableRow.getChildAt(j);
+                    if (btn.getId() == ints[count]) {
+                        btn.setText(strings[count]);
+                        if (!btn.getText().equals(""))
+                            btn.setEnabled(false);
+                    }
+                    count++;
+                }
+            }
+            winnerValue = savedInstanceState.getInt(BUNDLE_WINNER_VALUE);
+            mButtonsMessage = savedInstanceState.getStringArray(BUNDLE_M_BUTTON_MESSAGE);
+            mCount = savedInstanceState.getInt(BUNDLE_M_COUNT);
+
+
+        }
+    }
 }
